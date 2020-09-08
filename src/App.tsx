@@ -12,7 +12,7 @@ function Login() {
       const actionCodeSettings = {
         // URL you want to redirect back to. The domain (www.example.com) for this
         // URL must be whitelisted in the Firebase Console.
-        url: "http://localhost:8080/",
+        url: "http://localhost:3000/",
         handleCodeInApp: true
       };
       await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
@@ -34,6 +34,23 @@ const Dashboard: React.FunctionComponent<{
   user: firebase.User;
   idToken: firebase.auth.IdTokenResult;
 }> = ({ user, idToken }) => {
+  const logout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    firebase.auth().signOut();
+  };
+  const onChangeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      event.preventDefault();
+      const files = event.target.files;
+      if (!files) throw new Error("not file");
+      const file = files[0];
+      //const refFile = firebase.storage().ref(`category${file.name}`);
+      //await refFile.put(file, {contentType: file.type, customMetadata: {}})
+      console.log(file.type);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <header className="App-header">
       <form>
@@ -56,6 +73,12 @@ const Dashboard: React.FunctionComponent<{
         <label htmlFor="roles">roles</label>
         <input id="roles" type="text" defaultValue={idToken.claims["roles"]} />
         <br />
+        <br />
+        <label htmlFor="file">file</label>
+        <input id="file" type="file" onChange={onChangeFile} />
+        <br />
+        <br />
+        <button onClick={logout}>logout</button>
       </form>
     </header>
   );
