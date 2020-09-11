@@ -1,0 +1,23 @@
+syntax = "proto3";
+package authorization;
+
+service AuthorizationService {
+    rpc Authorization (PayloadAuthorization) returns (ResAuthorization);
+}
+
+enum Roles {
+    SUPER = 0;
+    MERCHANT_ADMIN=1;
+    MERCHANT_EMPLOYEES=2;
+    MERCHANT_COURIER=3;
+    CUSTOMER=4;
+}
+message ResAuthorization {
+    string uid = 1;
+    Roles roles = 2;
+    string parent = 3;
+    string identifier = 4;
+}
+message PayloadAuthorization {
+    repeated Roles roles = 1;
+}

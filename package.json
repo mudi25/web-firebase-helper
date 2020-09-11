@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "firebase": "^7.19.1",
+    "google-protobuf": "^3.13.0",
+    "grpc-web": "^1.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3"
@@ -15,7 +17,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "ignorePatterns": [
+      "**/*_pb.js"
+    ]
   },
   "browserslist": {
     "production": [
@@ -30,6 +35,7 @@
     ]
   },
   "devDependencies": {
+    "@types/google-protobuf": "^3.7.3",
     "@types/jest": "^26.0.12",
     "@types/node": "^14.6.2",
     "@types/react": "^16.9.49",

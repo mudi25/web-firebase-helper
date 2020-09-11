@@ -1,6 +1,9 @@
 import React from "react";
 import "./App.css";
 import firebase from "./firebase";
+import { AuthorizationServiceClient } from "./gen/AuthorizationServiceClientPb";
+import { PayloadAuthorization } from "./gen/authorization_pb";
+import {Metadata} from 'grpc-web';
 
 function Login() {
   const [email, setEmail] = React.useState("");
@@ -37,6 +40,22 @@ const Dashboard: React.FunctionComponent<{
   const logout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     firebase.auth().signOut();
+  };
+  
+  const testgrpc = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    try {
+      const api = new AuthorizationServiceClient(
+        "http://34.101.128.220:9090"
+      );
+      const token = await user.getIdTokenResult();
+      const authorization = 'Bearer '+token.token;
+      const metadata: Metadata = {authorization}
+      const result = await api.authorization(new PayloadAuthorization().setRolesList([0]), metadata);
+      console.log(result.toObject());
+    } catch (error) {
+      console.log(error);
+    }
   };
   const onChangeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -76,6 +95,9 @@ const Dashboard: React.FunctionComponent<{
         <br />
         <label htmlFor="file">file</label>
         <input id="file" type="file" onChange={onChangeFile} />
+        <br />
+        <br />
+        <button onClick={testgrpc}>TEST GRPC</button>
         <br />
         <br />
         <button onClick={logout}>logout</button>
